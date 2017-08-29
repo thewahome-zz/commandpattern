@@ -1,15 +1,58 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace CommandPattern
+namespace CalcCommands
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Calculator");
 
-          
-              
+
+    public partial class testForm : Form
+    {
+        IReciever calculator = null;
+        ACommand command = null;
+        AddCommand addCmd = null;
+        SubtractCommand subCmd = null;
+        MultiplyCommand mulCmd = null;
+        public testForm()
+        {
+            InitializeComponent();
+        }
+
+        private void testForm_Load(object sender, EventArgs e)
+        {
+            calculator = new Calculator(20, 10);
+
+            
+        }
+
+        private void calculate_Click_1(object sender, EventArgs e)
+        {
+            label4.Text = "Result: " + command.Execute().ToString();
+
+        }
+
+        private void radioAdd_CheckedChanged_1(object sender, EventArgs e)
+        {
+            if (radioAdd.Checked == true)
+            {
+                command = new AddCommand(calculator);
+               
+            }
+            else if (radioSub.Checked == true)
+            {
+                command =  new SubtractCommand(calculator);
+            }
+            else if (radioMultiply.Checked == true)
+            {
+                command = mulCmd = new MultiplyCommand(calculator);
+                
+            }
         }
     }
 
@@ -47,8 +90,15 @@ namespace CommandPattern
         }
         public override int Execute()
         {
-            reciever_.SetAction(ActionList.ADD);
-            return reciever_.GetResult();
+            try
+            {
+                reciever_.SetAction(ActionList.ADD);
+                return reciever_.GetResult();
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
         }
     }
 
@@ -121,49 +171,4 @@ namespace CommandPattern
 
         #endregion
     }
-
-    public partial class testForm : Form
-    {
-        IReciever calculator = null;
-        ACommand command = null;
-        AddCommand addCmd = null;
-        SubtractCommand subCmd = null;
-        MultiplyCommand mulCmd = null;
-
-        public testForm()
-        {
-            InitializeComponent();
-        }
-
-        private void testForm_Load(object sender, EventArgs e)
-        {
-            calculator = new Calculator(20, 10);
-
-            addCmd = new AddCommand(calculator);
-            subCmd = new SubtractCommand(calculator);
-            mulCmd = new MultiplyCommand(calculator);
-        }
-
-        private void radioAdd_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioAdd.Checked == true)
-            {
-                command = addCmd;
-            }
-            else if (radioSub.Checked == true)
-            {
-                command = subCmd;
-            }
-            else if (radioMultiply.Checked == true)
-            {
-                command = mulCmd;
-            }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            label3.Text = "Result: " + command.Execute().ToString();
-        }
-    }
-
 }
